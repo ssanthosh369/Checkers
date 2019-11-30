@@ -14,15 +14,12 @@ import java.util.ArrayList;
 public class CustomView extends View {
 
     private static final String TAG = CustomView.class.getSimpleName();
-
     private int nSquares;
     private int colorH;
-
     private int[] player1;
     private int[] player2;
     private int[] square1;
     private int[] square2;
-
     private Paint paint;
     private Paint paintPiece;
     private Paint paintHighlight;
@@ -37,7 +34,6 @@ public class CustomView extends View {
     private Piece clickedPiece;
     private int turn;
     private MainActivity main;
-
 
     public CustomView(Context c) {
         super(c);
@@ -75,7 +71,6 @@ public class CustomView extends View {
         turn = 1;
     }
 
-
     @Override
     public void onMeasure(int widthMeasureSpace, int heightMeasureSpec) {
 
@@ -87,7 +82,6 @@ public class CustomView extends View {
         squareDim = width / nSquares;
 
     }
-
 
     @Override
     protected void onDraw(Canvas canvas) {
@@ -273,7 +267,6 @@ public class CustomView extends View {
         game.removePiece(row, col);
     }
 
-
     public void reset() {
         init();
         main.updateText(game.count(1), game.count(2));
@@ -458,10 +451,12 @@ public class CustomView extends View {
 
     public void setPlayer1(int r, int g, int b) {
         player1 = new int[]{r, g, b};
+        main.updateText(game.count(1), game.count(2));
     }
 
     public void setPlayer2(int r, int g, int b) {
         player2 = new int[]{r, g, b};
+        main.updateText(game.count(1), game.count(2));
     }
 
     public void setSquare1(int r, int g, int b) {

@@ -1,7 +1,6 @@
 package com.example.assignment02;
 
 import androidx.appcompat.app.AppCompatActivity;
-
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.graphics.Color;
@@ -55,13 +54,19 @@ public class MainActivity extends AppCompatActivity {
 
     public void updateText(int count1, int count2) {
         Log.d("CustomView", "Updated text ");
-        CustomView draughts = findViewById(R.id.CustomView);
         String s1 = "Player 1 pieces: " + count1;
         p1.setText(s1);
-        int[] player1 = draughts.getColorP1();
-        p1.setTextColor(Color.argb(255, player1[0], player1[1], player1[2]));
         String s2 = "Player 2 pieces: " + count2;
         p2.setText(s2);
+        setColor();
+    }
+
+    public void setColor() {
+        CustomView draughts = findViewById(R.id.CustomView);
+
+        int[] player1 = draughts.getColorP1();
+        p1.setTextColor(Color.argb(255, player1[0], player1[1], player1[2]));
+
         int[] player2 = draughts.getColorP2();
         p2.setTextColor(Color.argb(255, player2[0], player2[1], player2[2]));
     }
@@ -326,7 +331,6 @@ public class MainActivity extends AppCompatActivity {
 
         AlertDialog alert11 = builder1.create();
         alert11.show();
-
     }
 
     public void winPlayer(int player) {
