@@ -168,6 +168,8 @@ public class CustomView extends View {
 
     public boolean onTouchEvent(MotionEvent event) {
 
+        // Toast.makeText(this,TAG, Toast.LENGTH_SHORT).show();
+        //Log.d(TAG,"clicked on tile : ");
         if (event.getActionMasked() == MotionEvent.ACTION_DOWN) {
             lastTouchDownXY[0] = event.getX();
             lastTouchDownXY[1] = event.getY();
@@ -177,18 +179,84 @@ public class CustomView extends View {
         y = (int) lastTouchDownXY[0] / squareDim;
         x = (int) lastTouchDownXY[1] / squareDim;
 
-        if (game.getBoard(x, y) == 1 && game.getPiece(x, y).getPlayer() == turn) {
-            PosMove clicked = checkMovement(x, y);
-            if (checkValidTouch(x, y, game.getPiece(x, y).getPlayer()) || !clicked.checkCapture()) {
-                touching = !touching;
-                if (touching) {
 
+
+        if (game.getBoard(x, y) == 1 && game.getPiece(x, y).getPlayer() == turn) {
+            PosMove clicked = checkMovement(x,y);
+            if(checkValidTouch(x,y,game.getPiece(x, y).getPlayer()) || !clicked.checkCapture()) {
+                touching = !touching;
+                if(touching) {
+                    checkMovesPossible(game.getPiece(x, y).getPlayer());
                     move = clicked.getMove();
                     temp = clicked.getCapture();
                 }
                 invalidate();
             }
+        } else {
+            ArrayList<Integer> trial;
+            if(temp.isEmpty())
+                trial = move;
+            else
+                trial = temp;
+            String s = "";
+            for(int i: trial) {
+                s += i + " ";
+            }
+            int removeCounter = 0;
+            for(int i: trial) {
+                if( (x * 10) + y == i) {
+                    touching = false;
+                    if(Math.abs(clickedPiece.getRow() - x) == 2 && Math.abs(clickedPiece.getCol() - y) == 2) {
+                        if(clickedPiece.getRow() > x ) {
+                            if(clickedPiece.getCol() > y) {
+                                removePiece(clickedPiece.getRow() - 1,clickedPiece.getCol() - 1);
+                            } else
+                                removePiece(clickedPiece.getRow() - 1,clickedPiece.getCol() + 1);
+                        }else {
+                            if(clickedPiece.getCol() > y) {
+                                removePiece(clickedPiece.getRow() + 1,clickedPiece.getCol() - 1);
+                            } else
+                                removePiece(clickedPiece.getRow() + 1,clickedPiece.getCol() + 1);
+                        }
+                        removeCounter = 1;
+                        int count1 = game.count(1);
+                        int count2 = game.count(2);
+
+                        if(main != null)
+                          //  main.updateText(count1,count2);
+
+                        if(count1 == 0) {
+                         //   main.winPlayer(2);
+                        } else
+                        if(count2 == 0) {
+                        //    main.winPlayer(1);
+                        }
+
+                    }
+                    game.setPiece(clickedPiece.getRow(),clickedPiece.getCol(),x,y);
+                    if(removeCounter == 1) {
+                        PosMove check = checkMovement(x,y);
+                        if(check.checkCapture()) {
+                            clearArrays();
+                            changeTurn();
+                            invalidate();
+                        }
+                        else
+                            touching = true;
+                    } else {
+                        changeTurn();
+                    }
+                    postInvalidate();
+
+                    break;
+                }
+            }
+
+
+            //  Log.i(TAG, "No piece here!");
+
         }
+
         return false;
     }
 
@@ -332,6 +400,41 @@ public class CustomView extends View {
             }
         }
         return counter;
+    }
+
+    private void changeTurn() {
+        if(turn ==1)
+            turn = 2;
+        else
+        if(turn ==2)
+            turn = 1;
+        //main.updateTurn(turn);
+    }
+
+    public void removePiece(int row,int col) {
+        game.removePiece(row,col);
+    }
+
+    public void checkMovesPossible(int player) {
+        boolean counter = true;
+        for(Piece i: game.getList()) {
+            if ( i.getPlayer() == player) {
+                PosMove p = checkMovement(i.getRow(), i.getCol());
+                if (!p.checkMove()) {
+                    counter = false;
+                    break;
+                }
+            }
+        }
+        if(counter) {
+            if(player == 1) {
+               // main.winPlayer(2);
+            } else {
+                if(player == 2) {
+                    //  main.winPlayer(1);
+                }
+            }
+        }
     }
 }
 
