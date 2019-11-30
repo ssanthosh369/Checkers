@@ -436,5 +436,15 @@ public class CustomView extends View {
             }
         }
     }
+
+    public void setReference(MainActivity main) {
+        this.main = main;
+    }
+
+    public void reset() {
+        init();
+        main.updateTurn(1);
+        invalidate();
+    }
 }
 
