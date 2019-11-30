@@ -1,6 +1,7 @@
 package com.example.assignment02;
 
 import androidx.appcompat.app.AppCompatActivity;
+
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.graphics.Color;
@@ -26,15 +27,16 @@ public class MainActivity extends AppCompatActivity {
         p2 = findViewById(R.id.p2);
         pTurn = findViewById(R.id.pTurn);
 
-        CustomView d = (CustomView) findViewById(R.id.CustomView);
+        CustomView d = findViewById(R.id.CustomView);
         d.setReference(this);
 
-        updateText(12,12);
+        updateText(12, 12);
+        updateTurn(1);
 
         findViewById(R.id.reset).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                CustomView draughts = (CustomView) findViewById(R.id.CustomView);
+                CustomView draughts = findViewById(R.id.CustomView);
                 draughts.reset();
 
             }
@@ -43,7 +45,7 @@ public class MainActivity extends AppCompatActivity {
         findViewById(R.id.settings).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                CustomView draughts = (CustomView) findViewById(R.id.CustomView);
+                CustomView draughts = findViewById(R.id.CustomView);
                 clickBox(draughts);
 
             }
@@ -52,19 +54,21 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void updateText(int count1, int count2) {
-        Toast.makeText(this,"AYAYA", Toast.LENGTH_SHORT).show();
-        Log.d("CustomView","Updated text ");
-        CustomView draughts = (CustomView) findViewById(R.id.CustomView);
-        p1.setText("Player 1 pieces: " + count1);
+        Log.d("CustomView", "Updated text ");
+        CustomView draughts = findViewById(R.id.CustomView);
+        String s1 = "Player 1 pieces: " + count1;
+        p1.setText(s1);
         int[] player1 = draughts.getColorP1();
-        p1.setTextColor(Color.argb(255,player1[0],player1[1],player1[2]));
-        p2.setText("Player 2 pieces: " + count2);
+        p1.setTextColor(Color.argb(255, player1[0], player1[1], player1[2]));
+        String s2 = "Player 2 pieces: " + count2;
+        p2.setText(s2);
         int[] player2 = draughts.getColorP2();
-        p2.setTextColor(Color.argb(255,player2[0],player2[1],player2[2]));
+        p2.setTextColor(Color.argb(255, player2[0], player2[1], player2[2]));
     }
 
     public void updateTurn(int turn) {
-        pTurn.setText("Turn of player " + turn);
+        String s = "Turn of player " + turn;
+        pTurn.setText(s);
     }
 
     public void clickBox(CustomView d) {
@@ -119,9 +123,9 @@ public class MainActivity extends AppCompatActivity {
                                                 int g = Integer.parseInt(et2.getText().toString());
                                                 int b = Integer.parseInt(et3.getText().toString());
 
-                                                if ((r <= 255 && r >= 0) && (g <= 255 && r >= 0) && (b <= 255 && r >= 0)) {
+                                                if ((r <= 255 && r >= 0) && (g <= 255 && g >= 0) && (b <= 255 && b >= 0)) {
                                                     draughts.setSquare2(r, g, b);
-                                                }else {
+                                                } else {
                                                     Toast.makeText(getBaseContext(), "RGB values have to be between 0 to 255 ", Toast.LENGTH_SHORT).show();
                                                 }
                                             } catch (NumberFormatException e) {
@@ -171,9 +175,9 @@ public class MainActivity extends AppCompatActivity {
                                                 int g = Integer.parseInt(et2.getText().toString());
                                                 int b = Integer.parseInt(et3.getText().toString());
 
-                                                if ((r <= 255 && r >= 0) && (g <= 255 && r >= 0) && (b <= 255 && r >= 0)) {
+                                                if ((r <= 255 && r >= 0) && (g <= 255 && g >= 0) && (b <= 255 && b >= 0)) {
                                                     draughts.setSquare1(r, g, b);
-                                                }else {
+                                                } else {
                                                     Toast.makeText(getBaseContext(), "RGB values have to be between 0 to 255 ", Toast.LENGTH_SHORT).show();
                                                 }
                                             } catch (NumberFormatException e) {
@@ -237,9 +241,9 @@ public class MainActivity extends AppCompatActivity {
                                                 int g = Integer.parseInt(et2.getText().toString());
                                                 int b = Integer.parseInt(et3.getText().toString());
 
-                                                if ((r <= 255 && r >= 0) && (g <= 255 && r >= 0) && (b <= 255 && r >= 0)) {
+                                                if ((r <= 255 && r >= 0) && (g <= 255 && g >= 0) && (b <= 255 && b >= 0)) {
                                                     draughts.setPlayer2(r, g, b);
-                                                }else {
+                                                } else {
                                                     Toast.makeText(getBaseContext(), "RGB values have to be between 0 to 255 ", Toast.LENGTH_SHORT).show();
                                                 }
                                             } catch (NumberFormatException e) {
@@ -289,9 +293,9 @@ public class MainActivity extends AppCompatActivity {
                                                 int g = Integer.parseInt(et2.getText().toString());
                                                 int b = Integer.parseInt(et3.getText().toString());
 
-                                                if ((r <= 255 && r >= 0) && (g <= 255 && r >= 0) && (b <= 255 && r >= 0)) {
+                                                if ((r <= 255 && r >= 0) && (g <= 255 && g >= 0) && (b <= 255 && b >= 0)) {
                                                     draughts.setPlayer1(r, g, b);
-                                                }else {
+                                                } else {
                                                     Toast.makeText(getBaseContext(), "RGB values have to be between 0 to 255 ", Toast.LENGTH_SHORT).show();
                                                 }
                                             } catch (NumberFormatException e) {

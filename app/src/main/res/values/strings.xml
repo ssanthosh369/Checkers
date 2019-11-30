@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Assignment 02</string>
+    <string name="button_reset">Reset</string>
+    <string name="button_settings">Settings</string>
 </resources>

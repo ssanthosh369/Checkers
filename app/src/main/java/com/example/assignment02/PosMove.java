@@ -2,36 +2,30 @@ package com.example.assignment02;
 
 import java.util.ArrayList;
 
-public class PosMove {
+class PosMove {
     private ArrayList<Integer> move;
     private ArrayList<Integer> capture;
 
 
-    public PosMove(ArrayList<Integer> m,ArrayList<Integer> c) {
+    PosMove(ArrayList<Integer> m, ArrayList<Integer> c) {
         move = m;
         capture = c;
     }
 
 
-    public boolean checkCapture() {
-        if(capture.isEmpty())
-            return true;
-        else
-            return false;
+    boolean checkCapture() {
+        return capture.isEmpty();
     }
 
-    public boolean checkMove() {
-        if(move.isEmpty())
-            return true;
-        else
-            return false;
+    boolean checkMove() {
+        return move.isEmpty();
     }
 
-    public ArrayList<Integer> getCapture() {
+    ArrayList<Integer> getCapture() {
         return capture;
     }
 
-    public ArrayList<Integer> getMove() {
+    ArrayList<Integer> getMove() {
         return move;
     }
 }

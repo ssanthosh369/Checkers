@@ -57,11 +57,10 @@ public class CustomView extends View {
     private void init() {
         nSquares = 8;
         colorH = Color.YELLOW;
-        player1 = new int[]{255,255,255};
-        player2 = new int[]{255,0,0};
-        square2 = new int[]{0,0,0};
-        square1 = new int[]{128,128,128};
-
+        player1 = new int[]{255, 255, 255};
+        player2 = new int[]{255, 0, 0};
+        square2 = new int[]{0, 0, 0};
+        square1 = new int[]{128, 128, 128};
 
 
         paint = new Paint();
@@ -94,14 +93,13 @@ public class CustomView extends View {
     protected void onDraw(Canvas canvas) {
 
 
-        int counter = 0;
+        int counter;
         for (int row = 0; row < nSquares; row++) {
-            if((row & 1) == 0) {
-                paint.setARGB(200,square1[0], square1[1], square1[2]);
+            if ((row & 1) == 0) {
+                paint.setARGB(200, square1[0], square1[1], square1[2]);
                 counter = 1;
-            }
-            else {
-                paint.setARGB(200,square2[0], square2[1], square2[2]);
+            } else {
+                paint.setARGB(200, square2[0], square2[1], square2[2]);
                 counter = 2;
             }
             paint.setFlags(Paint.ANTI_ALIAS_FLAG);
@@ -112,88 +110,65 @@ public class CustomView extends View {
                 int b = row * squareDim;
                 int half = (squareDim / 2);
                 canvas.drawRect(a, b, a + squareDim, b + squareDim, paint);
-                if(counter == 2) {
-                    paint.setARGB(200,square1[0], square1[1], square1[2]);
+                if (counter == 2) {
+                    paint.setARGB(200, square1[0], square1[1], square1[2]);
                     counter = 1;
                 } else {
-                    paint.setARGB(200,square2[0], square2[1], square2[2]);
+                    paint.setARGB(200, square2[0], square2[1], square2[2]);
                     counter = 2;
                 }
 
                 if (game.getBoard(row, col) == 1) {
 
                     if (game.getPiece(row, col).getPlayer() == 1)
-                        // paintPiece.setColor(Color.WHITE);
-                        paintPiece.setARGB(200,player1[0],player1[1],player1[2]);
+                        paintPiece.setARGB(200, player1[0], player1[1], player1[2]);
                     else
-                        //paintPiece.setColor(Color.RED);
-                        paintPiece.setARGB(200,player2[0],player2[1],player2[2]);
+                        paintPiece.setARGB(200, player2[0], player2[1], player2[2]);
 
                     paintPiece.setFlags(Paint.ANTI_ALIAS_FLAG);
                     canvas.drawCircle(a + half, b + half, half * 2 / 3, paintPiece);
 
-                    if(game.getPiece(row,col).isType()) {
+                    if (game.getPiece(row, col).isType()) {
                         paintPiece.setColor(Color.GREEN);
-                        canvas.drawCircle(a + half, b + half, half * 1 / 3, paintPiece);
+                        canvas.drawCircle(a + half, b + half, half / 3, paintPiece);
                     }
                 }
 
             }
 
 
-
         }
-        if(touching) {
+        if (touching) {
             clearArrays();
             int r = x * squareDim;
             int c = y * squareDim;
             int half = (squareDim / 2);
 
-            //paintPiece.setShadowLayer(half * 2/3, c + half + 1, r + half + 1, colorH);
             paintHighlight.setStyle(Paint.Style.FILL_AND_STROKE);
             canvas.drawCircle(c + half, r + half, half * 2 / 3, paintHighlight);
-            PosMove clicked = checkMovement(x,y);
-            if(clicked.checkCapture()) {
-                for(int i: clicked.getMove()) {
+            PosMove clicked = checkMovement(x, y);
+            if (clicked.checkCapture()) {
+                for (int i : clicked.getMove()) {
                     int canvasR = (i / 10) * squareDim;
                     int canvasC = (i % 10) * squareDim;
 
-                    canvas.drawRect(canvasC,canvasR,canvasC + squareDim, canvasR + squareDim, paintHighlight);
+                    canvas.drawRect(canvasC, canvasR, canvasC + squareDim, canvasR + squareDim, paintHighlight);
                 }
             } else {
-                for(int i: clicked.getCapture()) {
+                for (int i : clicked.getCapture()) {
                     int canvasR = (i / 10) * squareDim;
                     int canvasC = (i % 10) * squareDim;
 
-                    canvas.drawRect(canvasC,canvasR,canvasC + squareDim, canvasR + squareDim, paintHighlight);
+                    canvas.drawRect(canvasC, canvasR, canvasC + squareDim, canvasR + squareDim, paintHighlight);
                 }
             }
 
             move = clicked.getMove();
             temp = clicked.getCapture();
-        }else {
+        } else {
             clearArrays();
 
         }
-//            String s = "";
-//        if(temp.isEmpty()) {
-//            for (int i : move) {
-//                s += i + " ";
-//            }
-//            Log.i(TAG, s);
-//            if (s.isEmpty()) {
-//                Log.i(TAG, "Empty");
-//            }
-//        } else {
-//            for (int i : temp) {
-//                s += i + " ";
-//            }
-//            Log.i(TAG, s);
-//            if (s.isEmpty()) {
-//                Log.i(TAG, "Empty");
-//            }
-//
-//        }
     }
 
     public boolean onTouchEvent(MotionEvent event) {
@@ -203,6 +178,7 @@ public class CustomView extends View {
         if (event.getActionMasked() == MotionEvent.ACTION_DOWN) {
             lastTouchDownXY[0] = event.getX();
             lastTouchDownXY[1] = event.getY();
+            performClick();
         }
 
 
@@ -210,15 +186,14 @@ public class CustomView extends View {
         x = (int) lastTouchDownXY[1] / squareDim;
 
 
-
         Log.i(TAG, "onLongClick: Row = " + x + ", Col = " + y);
         if (game.getBoard(x, y) == 1 && game.getPiece(x, y).getPlayer() == turn) {
-            PosMove clicked = checkMovement(x,y);
-            if(checkValidTouch(x,y,game.getPiece(x, y).getPlayer()) || !clicked.checkCapture()) {
+            PosMove clicked = checkMovement(x, y);
+            if (checkValidTouch(x, y, game.getPiece(x, y).getPlayer()) || !clicked.checkCapture()) {
                 touching = !touching;
-                if(touching) {
+                if (touching) {
                     checkMovesPossible(game.getPiece(x, y).getPlayer());
-                    Log.i(TAG,"CAN MOVE");
+                    Log.i(TAG, "CAN MOVE");
                     move = clicked.getMove();
                     temp = clicked.getCapture();
                 }
@@ -227,62 +202,63 @@ public class CustomView extends View {
             }
         } else {
             ArrayList<Integer> trial;
-            if(temp.isEmpty())
+            if (temp.isEmpty())
                 trial = move;
             else
                 trial = temp;
-            String s = "";
-            for(int i: trial) {
-                s += i + " ";
+            StringBuilder sb = new StringBuilder();
+            for (int i : trial) {
+                //s += i + " ";
+                sb.append(i).append(" ");
             }
-            Log.i(TAG,"Movement: " + s);
+            String s = sb.toString();
+            Log.i(TAG, "Movement: " + s);
             int removeCounter = 0;
-            for(int i: trial) {
-                if( (x * 10) + y == i) {
+            for (int i : trial) {
+                if ((x * 10) + y == i) {
                     touching = false;
                     Log.i(TAG, "Piece in " + clickedPiece.getRow() + " - " + clickedPiece.getCol() +
                             " is Moved to " + x + " - " + y);
 
 
-                    if(Math.abs(clickedPiece.getRow() - x) == 2 && Math.abs(clickedPiece.getCol() - y) == 2) {
-                        Log.i(TAG, "Difference: " +Math.abs(clickedPiece.getRow() - x));
-                        if(clickedPiece.getRow() > x ) {
-                            if(clickedPiece.getCol() > y) {
-                                removePiece(clickedPiece.getRow() - 1,clickedPiece.getCol() - 1);
+                    if (Math.abs(clickedPiece.getRow() - x) == 2 && Math.abs(clickedPiece.getCol() - y) == 2) {
+                        Log.i(TAG, "Difference: " + Math.abs(clickedPiece.getRow() - x));
+                        if (clickedPiece.getRow() > x) {
+                            if (clickedPiece.getCol() > y) {
+                                removePiece(clickedPiece.getRow() - 1, clickedPiece.getCol() - 1);
                             } else
-                                removePiece(clickedPiece.getRow() - 1,clickedPiece.getCol() + 1);
-                        }else {
-                            if(clickedPiece.getCol() > y) {
-                                removePiece(clickedPiece.getRow() + 1,clickedPiece.getCol() - 1);
+                                removePiece(clickedPiece.getRow() - 1, clickedPiece.getCol() + 1);
+                        } else {
+                            if (clickedPiece.getCol() > y) {
+                                removePiece(clickedPiece.getRow() + 1, clickedPiece.getCol() - 1);
                             } else
-                                removePiece(clickedPiece.getRow() + 1,clickedPiece.getCol() + 1);
+                                removePiece(clickedPiece.getRow() + 1, clickedPiece.getCol() + 1);
                         }
                         Log.i(TAG, "Piece removed");
                         removeCounter = 1;
                         int count1 = game.count(1);
                         int count2 = game.count(2);
 
-                        if(main != null)
-                            main.updateText(count1,count2);
+                        if (main != null) {
+                            main.updateText(count1, count2);
 
-                        if(count1 == 0) {
-                            main.winPlayer(2);
-                        } else
-                        if(count2 == 0) {
-                            main.winPlayer(1);
+                            if (count1 == 0) {
+                                main.winPlayer(2);
+                            } else if (count2 == 0) {
+                                main.winPlayer(1);
+                            }
                         }
 
                     }
-                    game.setPiece(clickedPiece.getRow(),clickedPiece.getCol(),x,y);
-                    if(removeCounter == 1) {
-                        PosMove check = checkMovement(x,y);
-                        if(check.checkCapture()) {
-                            Log.i(TAG,"Cant capture anymore so change turn");
+                    game.setPiece(clickedPiece.getRow(), clickedPiece.getCol(), x, y);
+                    if (removeCounter == 1) {
+                        PosMove check = checkMovement(x, y);
+                        if (check.checkCapture()) {
+                            Log.i(TAG, "Cant capture anymore so change turn");
                             clearArrays();
                             changeTurn();
                             invalidate();
-                        }
-                        else
+                        } else
                             touching = true;
                     } else {
                         changeTurn();
@@ -293,38 +269,40 @@ public class CustomView extends View {
                 }
             }
 
-
-            //  Log.i(TAG, "No piece here!");
-
         }
 
         return false;
     }
 
+    @Override
+    public boolean performClick() {
+        super.performClick();
+        Log.d(TAG, "Clicked");
+        return true;
+    }
 
     private void changeTurn() {
-        if(turn ==1)
+        if (turn == 1)
             turn = 2;
-        else
-        if(turn ==2)
+        else if (turn == 2)
             turn = 1;
         main.updateTurn(turn);
     }
 
-    public void removePiece(int row,int col) {
-        game.removePiece(row,col);
+    public void removePiece(int row, int col) {
+        game.removePiece(row, col);
     }
 
 
     public void reset() {
         init();
-        main.updateText(game.count(1),game.count(2));
+        main.updateText(game.count(1), game.count(2));
         main.updateTurn(1);
         invalidate();
     }
 
     public void setReference(MainActivity main) {
-        Log.d(TAG,"Reference set: " + main);
+        Log.d(TAG, "Reference set: " + main);
         this.main = main;
     }
 
@@ -333,7 +311,7 @@ public class CustomView extends View {
         temp.clear();
     }
 
-    public PosMove checkMovement(int x,int y) {
+    public PosMove checkMovement(int x, int y) {
 
         clickedPiece = game.getPiece(x, y);
         int player = game.getPiece(x, y).getPlayer();
@@ -348,14 +326,10 @@ public class CustomView extends View {
                 hRow = (x - 1) * squareDim;
             }
 
-            int hCol;
             if ((hRow / squareDim) >= 0 && (hRow / squareDim) <= 7) {
                 if (y + 1 < 8) {
-                    hCol = (y + 1) * squareDim;
                     if (game.getBoard(hRow / squareDim, y + 1) == 0) {
-                        // canvas.drawRect(hCol, hRow, hCol + squareDim, hRow + squareDim, paintHighlight);
                         a.add((hRow / squareDim) * 10 + (y + 1));
-                        //  Log.i(TAG, "Move 1");
                     } else if (game.getBoard(hRow / squareDim, y + 1) == 1 && game.getPiece(hRow / squareDim, y + 1).getPlayer() != player) {
                         int cRow;
                         if (player == 1) {
@@ -364,23 +338,15 @@ public class CustomView extends View {
                             cRow = (hRow / squareDim) - 1;
                         if (y + 2 < 8 && (cRow >= 0 && cRow < 8)) {
                             if (game.getBoard(cRow, y + 2) == 0) {
-                                hCol = (y + 2) * squareDim;
                                 b.add((cRow * 10) + (y + 2));
-                                cRow = cRow * squareDim;
-                                // canvas.drawRect(hCol, cRow, hCol + squareDim, cRow + squareDim, paintHighlight);
-
-                                //  Log.i(TAG, "Move 2");
                             }
                         }
                     }
                 }
 
                 if (y - 1 >= 0) {
-                    hCol = (y - 1) * squareDim;
                     if (game.getBoard(hRow / squareDim, y - 1) == 0) {
                         a.add((hRow / squareDim) * 10 + (y - 1));
-                        // Log.i(TAG, "Move 3");
-                        //canvas.drawRect(hCol, hRow, hCol + squareDim, hRow + squareDim, paintHighlight);
                     } else if (game.getBoard(hRow / squareDim, y - 1) == 1 && game.getPiece(hRow / squareDim, y - 1).getPlayer() != player) {
                         int cRow;
                         if (player == 1) {
@@ -390,12 +356,7 @@ public class CustomView extends View {
 
                         if (y - 2 >= 0 && (cRow >= 0 && cRow < 8)) {
                             if (game.getBoard(cRow, y - 2) == 0) {
-                                hCol = (y - 2) * squareDim;
                                 b.add((cRow * 10) + (y - 2));
-                                cRow = cRow * squareDim;
-                                // canvas.drawRect(hCol, cRow, hCol + squareDim, cRow + squareDim, paintHighlight);
-
-                                //  Log.i(TAG, "Move 4");
                             }
                         }
                     }
@@ -409,23 +370,12 @@ public class CustomView extends View {
 
                 if (game.getBoard(kRow, kCol) == 0) {
                     a.add((kRow) * 10 + kCol);
-                    kCol = kCol * squareDim;
-                    kRow *= squareDim;
-                    // canvas.drawRect(kCol, kRow, kCol + squareDim, kRow + squareDim, paintHighlight);
-
-                    //  Log.i(TAG, "Move 1");
                 } else if (game.getBoard(kRow, kCol) == 1 && game.getPiece(kRow, kCol).getPlayer() != player) {
                     kRow = x + 2;
                     kCol = y + 2;
                     if (kCol < 8 && (kRow >= 0 && kRow < 8)) {
                         if (game.getBoard(kRow, kCol) == 0) {
                             b.add((kRow * 10) + kCol);
-                            kCol *= squareDim;
-
-                            kRow *= squareDim;
-                            // canvas.drawRect(kCol, kRow, kCol + squareDim, kRow + squareDim, paintHighlight);
-
-                            //   Log.i(TAG, "Move 2");
                         }
                     }
                 }
@@ -437,23 +387,12 @@ public class CustomView extends View {
 
                 if (game.getBoard(kRow, kCol) == 0) {
                     a.add((kRow * 10) + kCol);
-                    kCol = kCol * squareDim;
-                    kRow *= squareDim;
-                    //canvas.drawRect(kCol, kRow, kCol + squareDim, kRow + squareDim, paintHighlight);
-
-                    //  Log.i(TAG, "Move 3");
                 } else if (game.getBoard(kRow, kCol) == 1 && game.getPiece(kRow, kCol).getPlayer() != player) {
                     kRow = x + 2;
                     kCol = y - 2;
                     if (kCol >= 0 && (kRow >= 0 && kRow < 8)) {
                         if (game.getBoard(kRow, kCol) == 0) {
                             b.add((kRow * 10) + kCol);
-                            kCol *= squareDim;
-
-                            kRow *= squareDim;
-                            // canvas.drawRect(kCol, kRow, kCol + squareDim, kRow + squareDim, paintHighlight);
-
-                            //   Log.i(TAG, "Move 4");
                         }
                     }
                 }
@@ -466,23 +405,12 @@ public class CustomView extends View {
 
                 if (game.getBoard(kRow, kCol) == 0) {
                     a.add((kRow * 10) + kCol);
-                    kCol = kCol * squareDim;
-                    kRow *= squareDim;
-                    //canvas.drawRect(kCol, kRow, kCol + squareDim, kRow + squareDim, paintHighlight);
-
-                    //  Log.i(TAG, "Move 5");
                 } else if (game.getBoard(kRow, kCol) == 1 && game.getPiece(kRow, kCol).getPlayer() != player) {
                     kRow = x - 2;
                     kCol = y - 2;
                     if (kCol >= 0 && (kRow >= 0 && kRow < 8)) {
                         if (game.getBoard(kRow, kCol) == 0) {
                             b.add((kRow * 10) + kCol);
-                            kCol *= squareDim;
-
-                            kRow *= squareDim;
-                            //  canvas.drawRect(kCol, kRow, kCol + squareDim, kRow + squareDim, paintHighlight);
-
-                            //    Log.i(TAG, "Move 6");
                         }
                     }
                 }
@@ -494,23 +422,12 @@ public class CustomView extends View {
 
                 if (game.getBoard(kRow, kCol) == 0) {
                     a.add((kRow * 10) + kCol);
-                    kCol = kCol * squareDim;
-                    kRow *= squareDim;
-                    // canvas.drawRect(kCol, kRow, kCol + squareDim, kRow + squareDim, paintHighlight);
-
-                    //   Log.i(TAG, "Move 7");
                 } else if (game.getBoard(kRow, kCol) == 1 && game.getPiece(kRow, kCol).getPlayer() != player) {
                     kRow = x - 2;
                     kCol = y + 2;
                     if (kCol < 8 && (kRow >= 0 && kRow < 8)) {
                         if (game.getBoard(kRow, kCol) == 0) {
                             b.add((kRow * 10) + kCol);
-                            kCol *= squareDim;
-
-                            kRow *= squareDim;
-                            //   canvas.drawRect(kCol, kRow, kCol + squareDim, kRow + squareDim, paintHighlight);
-
-                            //    Log.i(TAG, "Move 8");
                         }
                     }
                 }
@@ -519,13 +436,13 @@ public class CustomView extends View {
 
         }
 
-        return new PosMove(a,b);
+        return new PosMove(a, b);
     }
 
     public boolean checkValidTouch(int x, int y, int player) {
 
         boolean counter = true;
-        for(Piece i: game.getList()) {
+        for (Piece i : game.getList()) {
             if (!(i.getRow() == x && i.getCol() == y) && i.getPlayer() == player) {
                 //  Log.i(TAG,"Size: " + game.getList().size());
                 //Log.i(TAG, "Same piece " + piece++);
@@ -537,9 +454,6 @@ public class CustomView extends View {
                     break;
 
                 }
-//                        else {
-//                            Log.i(TAG, "PIECE FOUNDDDDDD for row " + i.getRow() + " col " + i.getCol());
-//                        }
             }
 
         }
@@ -548,8 +462,8 @@ public class CustomView extends View {
 
     public void checkMovesPossible(int player) {
         boolean counter = true;
-        for(Piece i: game.getList()) {
-            if ( i.getPlayer() == player) {
+        for (Piece i : game.getList()) {
+            if (i.getPlayer() == player) {
                 PosMove p = checkMovement(i.getRow(), i.getCol());
                 if (!p.checkMove()) {
                     Log.i(TAG, "Moves available to " + i.getRow() + " " + i.getCol());
@@ -558,28 +472,31 @@ public class CustomView extends View {
                 }
             }
         }
-        if(counter) {
+        if (counter) {
             Log.i(TAG, "No Moves ");
-            if(player == 1) {
+            if (player == 1) {
                 main.winPlayer(2);
             } else {
-                if(player == 2)
+                if (player == 2)
                     main.winPlayer(1);
             }
         }
     }
+
     public void setPlayer1(int r, int g, int b) {
-        player1 = new int[]{r,g,b};
+        player1 = new int[]{r, g, b};
     }
+
     public void setPlayer2(int r, int g, int b) {
-        player2 = new int[]{r,g,b};
+        player2 = new int[]{r, g, b};
     }
 
     public void setSquare1(int r, int g, int b) {
-        square1 = new int[]{r,g,b};
+        square1 = new int[]{r, g, b};
     }
+
     public void setSquare2(int r, int g, int b) {
-        square2 = new int[]{r,g,b};
+        square2 = new int[]{r, g, b};
     }
 
     public int[] getColorP1() {
