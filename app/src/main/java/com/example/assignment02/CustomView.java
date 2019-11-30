@@ -172,9 +172,6 @@ public class CustomView extends View {
     }
 
     public boolean onTouchEvent(MotionEvent event) {
-
-        // Toast.makeText(this,TAG, Toast.LENGTH_SHORT).show();
-        //Log.d(TAG,"clicked on tile : ");
         if (event.getActionMasked() == MotionEvent.ACTION_DOWN) {
             lastTouchDownXY[0] = event.getX();
             lastTouchDownXY[1] = event.getY();
@@ -186,18 +183,15 @@ public class CustomView extends View {
         x = (int) lastTouchDownXY[1] / squareDim;
 
 
-        Log.i(TAG, "onLongClick: Row = " + x + ", Col = " + y);
         if (game.getBoard(x, y) == 1 && game.getPiece(x, y).getPlayer() == turn) {
             PosMove clicked = checkMovement(x, y);
             if (checkValidTouch(x, y, game.getPiece(x, y).getPlayer()) || !clicked.checkCapture()) {
                 touching = !touching;
                 if (touching) {
                     checkMovesPossible(game.getPiece(x, y).getPlayer());
-                    Log.i(TAG, "CAN MOVE");
                     move = clicked.getMove();
                     temp = clicked.getCapture();
                 }
-                Log.i(TAG, "Piece of player " + game.getPiece(x, y).getPlayer() + " is here");
                 invalidate();
             }
         } else {
@@ -206,23 +200,11 @@ public class CustomView extends View {
                 trial = move;
             else
                 trial = temp;
-            StringBuilder sb = new StringBuilder();
-            for (int i : trial) {
-                //s += i + " ";
-                sb.append(i).append(" ");
-            }
-            String s = sb.toString();
-            Log.i(TAG, "Movement: " + s);
             int removeCounter = 0;
             for (int i : trial) {
                 if ((x * 10) + y == i) {
                     touching = false;
-                    Log.i(TAG, "Piece in " + clickedPiece.getRow() + " - " + clickedPiece.getCol() +
-                            " is Moved to " + x + " - " + y);
-
-
                     if (Math.abs(clickedPiece.getRow() - x) == 2 && Math.abs(clickedPiece.getCol() - y) == 2) {
-                        Log.i(TAG, "Difference: " + Math.abs(clickedPiece.getRow() - x));
                         if (clickedPiece.getRow() > x) {
                             if (clickedPiece.getCol() > y) {
                                 removePiece(clickedPiece.getRow() - 1, clickedPiece.getCol() - 1);
@@ -234,7 +216,6 @@ public class CustomView extends View {
                             } else
                                 removePiece(clickedPiece.getRow() + 1, clickedPiece.getCol() + 1);
                         }
-                        Log.i(TAG, "Piece removed");
                         removeCounter = 1;
                         int count1 = game.count(1);
                         int count2 = game.count(2);
@@ -254,7 +235,6 @@ public class CustomView extends View {
                     if (removeCounter == 1) {
                         PosMove check = checkMovement(x, y);
                         if (check.checkCapture()) {
-                            Log.i(TAG, "Cant capture anymore so change turn");
                             clearArrays();
                             changeTurn();
                             invalidate();
@@ -302,7 +282,6 @@ public class CustomView extends View {
     }
 
     public void setReference(MainActivity main) {
-        Log.d(TAG, "Reference set: " + main);
         this.main = main;
     }
 
@@ -444,12 +423,8 @@ public class CustomView extends View {
         boolean counter = true;
         for (Piece i : game.getList()) {
             if (!(i.getRow() == x && i.getCol() == y) && i.getPlayer() == player) {
-                //  Log.i(TAG,"Size: " + game.getList().size());
-                //Log.i(TAG, "Same piece " + piece++);
-
                 PosMove p = checkMovement(i.getRow(), i.getCol());
                 if (!p.checkCapture()) {
-                    Log.i(TAG, "Invalid touch because of " + i.getRow() + " " + i.getCol());
                     counter = false;
                     break;
 
@@ -466,14 +441,12 @@ public class CustomView extends View {
             if (i.getPlayer() == player) {
                 PosMove p = checkMovement(i.getRow(), i.getCol());
                 if (!p.checkMove()) {
-                    Log.i(TAG, "Moves available to " + i.getRow() + " " + i.getCol());
                     counter = false;
                     break;
                 }
             }
         }
         if (counter) {
-            Log.i(TAG, "No Moves ");
             if (player == 1) {
                 main.winPlayer(2);
             } else {
